@@ -41,3 +41,17 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+#entornos virtuales
+.entv
+.entv/*
+.nenv
+.nenv/*
+
+#Variables de entorno
+.env
+.env.*
+
+#archivo de configuracion
+src/app/nucleo/config/entorno.config.ts
+

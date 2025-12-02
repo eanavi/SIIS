@@ -1,0 +1,309 @@
+// src/app/compartido/componentes/header/header.component.scss
+
+.header-toolbar {
+  height: 90px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--mat-sys-surface);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.institucional {
+  box-sizing: border-box;
+  width: 100%;
+  align-items: inherit;
+  white-space: nowrap;
+}
+
+// Título del sistema
+.header-title {
+  height: 36px;
+  display: flex;
+  align-items: inherit;
+  padding-left: 240px;
+  padding-top: 10px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  h1 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+}
+
+// Contenedor inferior (menú + usuario)
+.header-bottom {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  background: var(--mat-sys-surface);
+}
+
+
+.loading-menus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+
+  mat-spinner {
+    ::ng-deep circle {
+      stroke: var(--mat-sys-primary);
+    }
+  }
+}
+
+.no-menus {
+  padding: 0 20px;
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  font-style: italic;
+}
+
+
+// Menú de navegación
+.navigation-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 240px;
+  height: 100%;
+
+  .nav-item {
+    height: 100%;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    position: relative;
+    transition: all 0.3s ease;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    // Efecto hover
+    &:hover:not(.active-link) {
+      background-color: rgba(0, 0, 0, 0.04);
+      color: var(--mat-sys-primary);
+    }
+
+    // Link activo
+    &.active-link {
+      color: var(--mat-sys-primary);
+      background-color: rgba(102, 126, 234, 0.08);
+
+      // Línea inferior para link activo
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--mat-sys-primary);
+        animation: slideIn 0.3s ease-out;
+      }
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+// Menú de usuario
+.user-menu {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 0;
+}
+
+.user-button {
+  height: 100%;
+  border-radius: 0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+
+  .user-name {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  .dropdown-icon {
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  // Rotar el ícono cuando el menú está abierto
+  &[aria-expanded="true"] .dropdown-icon {
+    transform: rotate(180deg);
+  }
+}
+
+// Estilos del panel del menú desplegable
+::ng-deep .user-menu-panel {
+  margin-top: 8px;
+  min-width: 280px;
+
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+
+  .menu-header {
+    padding: 16px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .menu-header-content {
+      flex: 1;
+
+      strong {
+        font-size: 16px;
+        display: block;
+      }
+    }
+  }
+
+  .info-item {
+    padding: 12px 16px;
+    min-height: 64px;
+    cursor: default;
+    opacity: 1 !important;
+
+    mat-icon {
+      color: var(--mat-sys-on-surface-variant);
+      margin-right: 12px;
+    }
+
+    span {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      small {
+        font-size: 11px;
+        color: var(--mat-sys-on-surface-variant);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      strong {
+        font-size: 14px;
+        color: var(--mat-sys-on-surface);
+      }
+    }
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
+  .logout-item {
+    color: var(--mat-sys-error);
+    font-weight: 500;
+
+    mat-icon {
+      color: var(--mat-sys-error);
+    }
+
+    &:hover {
+      background-color: rgba(244, 67, 54, 0.08) !important;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .header-title {
+    padding-left: 24px;
+
+    h1 {
+      font-size: 16px;
+    }
+  }
+
+  .navigation-menu {
+    margin-left: 24px;
+
+    .nav-item span {
+      display: none;
+    }
+
+    .nav-item {
+      padding: 0 16px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header-toolbar {
+    height: auto;
+    min-height: 90px;
+  }
+
+  .header-bottom {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .navigation-menu {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+    gap: 0;
+  }
+
+  .user-menu {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .user-button {
+    .user-name {
+      max-width: 150px;
+    }
+  }
+}

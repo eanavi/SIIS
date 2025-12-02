@@ -1,0 +1,89 @@
+<!-- src/app/compartido/componentes/header/header.component.html -->
+
+
+  <div class="institucional header-toolbar">
+   <!-- Título del Sistema -->
+  <div class="header-title">
+    <h1>Sistema Interoperable de Información en Salud  -  {{ nombreCentro }}</h1>
+  </div>
+
+  <!-- Contenedor de navegación y usuario -->
+  <div class="header-bottom">
+    <!-- Menú de navegación horizontal -->
+    <nav class="navigation-menu">
+      @if (cargandoMenus()) {
+        <div class="loading-menus">
+          <mat-spinner diameter="24"></mat-spinner>
+          <span>Cargando menús...</span>
+        </div>
+      } @else if (menuItems().length > 0) {
+        @for (item of menuItems(); track item.route) {
+          <a
+            mat-button
+            [routerLink]="item.route"
+            routerLinkActive="active-link"
+            class="nav-item"
+          >
+            @if (item.icon) {
+              <mat-icon>{{ item.icon }}</mat-icon>
+            }
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      } @else {
+        <span class="no-menus">No hay menús disponibles</span>
+      }
+    </nav>
+
+    <!-- Menú de usuario -->
+    <div class="user-menu">
+      <button
+        mat-button
+        [matMenuTriggerFor]="userMenu"
+        class="user-button"
+      >
+        <mat-icon>account_circle</mat-icon>
+        <span class="user-name">{{ nombreUsuario }}</span>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu" class="user-menu-panel">
+        <!-- Nombre del usuario (header del menú) -->
+        <div class="menu-header">
+          <mat-icon>person</mat-icon>
+          <div class="menu-header-content">
+            <strong>{{ nombreUsuario }}</strong>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Centro de trabajo -->
+        <button mat-menu-item disabled class="info-item">
+          <mat-icon>business</mat-icon>
+          <span>
+            <small>Centro:</small><br>
+            <strong>{{ nombreCentro }}</strong>
+          </span>
+        </button>
+
+        <!-- Rol -->
+        <button mat-menu-item disabled class="info-item">
+          <mat-icon>badge</mat-icon>
+          <span>
+            <small>Rol:</small><br>
+            <strong>{{ nombreRol }}</strong>
+          </span>
+        </button>
+
+        <mat-divider></mat-divider>
+
+        <!-- Cerrar sesión -->
+        <button mat-menu-item (click)="cerrarSesion()" class="logout-item">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+  </div>
