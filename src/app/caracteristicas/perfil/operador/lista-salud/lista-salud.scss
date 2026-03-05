@@ -1,0 +1,213 @@
+/* ===== CONTENEDOR PRINCIPAL ===== */
+
+.lista-empleado-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===== HEADER ===== */
+
+.page-header {
+  margin-bottom: 24px;
+  /*background: linear-gradient(135deg, #1565c0, #1e88e5);
+  color: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);*/
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.9;
+  color: var(--mat-sys-primary)
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.header-text p {
+  margin: 4px 0 0;
+  opacity: 0.85;
+  color: var(--mat-sys-on-surface-variant)
+}
+
+/* ===== CARDS ===== */
+
+.search-card,
+.lista-card {
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.search-field {
+  width: 100%;
+}
+
+/* ===== TABLA ===== */
+
+.table-container {
+  overflow-x: auto;
+}
+
+.tabla-empleados {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* HEADER */
+
+.mat-mdc-header-row {
+  background-color: #f4f6f9;
+}
+
+.mat-mdc-header-cell {
+  font-weight: 600;
+  color: #37474f;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+/* ROWS */
+
+.table-row {
+  transition: background 0.2s ease;
+}
+
+.table-row:hover {
+  background-color: #f9fbff;
+}
+
+/* CELDAS */
+
+.mat-mdc-cell {
+  padding: 16px 12px;
+  vertical-align: middle;
+}
+
+/* CI */
+
+.ci-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ci-icon {
+  font-size: 18px;
+  color: var(--mat-sys-primary);
+}
+
+.ci-number {
+  font-weight: 500;
+}
+
+/* NOMBRE */
+
+.nombre-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar-icon {
+  color: var(--mat-sys-primary)
+}
+
+.nombre-text {
+  font-weight: 500;
+}
+
+/* FECHA */
+
+.fecha-nacimiento-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fecha-icon {
+  font-size: 18px;
+  color: var(--mat-sys-primary);
+}
+
+/* CARGO */
+
+.cargo-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cargo-icon {
+  font-size: 18px;
+  color: vary(--mat-sys-primary)
+}
+
+.cargo-text {
+  font-weight: 400;
+}
+
+/* Placeholder cuando no hay dato */
+
+.empty {
+  color: #b0bec5;
+  font-style: italic;
+}
+
+/* ===== ACCIONES ===== */
+
+.acciones-cell {
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== ESTADOS ===== */
+
+.loading-container,
+.error-container,
+.empty-container {
+  text-align: center;
+  padding: 40px 20px;
+  color: #546e7a;
+}
+
+.error-icon,
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  color: #90a4ae;
+}
+
+/* ===== PAGINADOR ===== */
+
+.table-pagination {
+  margin-top: 16px;
+}
+
+/* ===== CHIPS ===== */
+
+mat-chip {
+  font-weight: 500;
+}

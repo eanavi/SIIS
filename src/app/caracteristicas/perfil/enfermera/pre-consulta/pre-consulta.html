@@ -1,0 +1,366 @@
+<!-- src/app/caracteristicas/consultas/nueva-consulta-enfermeria/nueva-consulta-enfermeria.component.html -->
+
+<div class="pre-consulta-container">
+
+  @if (cargando()) {
+    <!-- Estado de carga -->
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando información del paciente...</p>
+    </div>
+  } @else if (error()) {
+    <!-- Estado de error -->
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h2>Error al cargar datos</h2>
+          <p>{{ error() }}</p>
+          <button mat-raised-button color="primary" (click)="cargarDatosPaciente()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <!-- Contenido principal -->
+
+    <!-- Header con información del paciente -->
+    <mat-card class="patient-header">
+      <mat-card-content>
+        <div class="patient-info-header">
+          <div class="patient-main-info">
+            <mat-icon class="patient-avatar">account_circle</mat-icon>
+            <div class="patient-details">
+              <h2>{{ nombreCompletoPaciente }}</h2>
+              <div class="patient-meta">
+                <mat-chip-set>
+                  <mat-chip>
+                    <mat-icon>badge</mat-icon>
+                    CI: {{ paciente()?.ci }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon [class.male]="paciente()?.sexo === 'M'" [class.female]="paciente()?.sexo === 'F'">
+                      {{ paciente()?.sexo === 'M' ? 'male' : 'female' }}
+                    </mat-icon>
+                    {{ paciente()?.sexo === 'M' ? 'Masculino' : 'Femenino' }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon>cake</mat-icon>
+                    {{ edadPaciente }}
+                  </mat-chip>
+                  <mat-chip highlighted>
+                    <mat-icon>water_drop</mat-icon>
+                    Tipo: {{ paciente()?.tipo_sangre }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+          </div>
+
+          <div class="consultation-date">
+            <mat-icon>event</mat-icon>
+            <span>{{ fechaActual | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Formulario de enfermería -->
+    <form [formGroup]="enfermeriaForm" (ngSubmit)="guardarConsulta()">
+
+      <!-- Signos vitales -->
+      <mat-card class="vital-signs-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>monitor_heart</mat-icon>
+            <span>Signos Vitales</span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="vital-signs-grid">
+
+            <!-- Peso -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Peso (kg)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="peso"
+                placeholder="Ej: 70.5"
+                step="0.1"
+              >
+              <mat-icon matPrefix class="vital-icon weight">monitor_weight</mat-icon>
+              <span matSuffix>kg</span>
+              @if (enfermeriaForm.get('peso')?.hasError('min') || enfermeriaForm.get('peso')?.hasError('max')) {
+                <mat-error>Peso inválido (0-300 kg)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Talla -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Talla (m)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="talla"
+                placeholder="Ej: 1.75"
+                step="0.01"
+              >
+              <mat-icon matPrefix class="vital-icon height">height</mat-icon>
+              <span matSuffix>m</span>
+              @if (enfermeriaForm.get('talla')?.hasError('min') || enfermeriaForm.get('talla')?.hasError('max')) {
+                <mat-error>Talla inválida (0-3 m)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- IMC (calculado) -->
+            <div class="imc-display">
+              <mat-icon class="vital-icon imc">calculate</mat-icon>
+              <div class="imc-content">
+                <span class="imc-label">IMC</span>
+                <span class="imc-value">
+                  {{ calcularIMC() }}
+                  <small>{{ obtenerClasificacionIMC() }}</small>
+                </span>
+              </div>
+            </div>
+
+            <!-- Temperatura -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Temperatura (°C)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="temperatura"
+                placeholder="Ej: 37.0"
+                step="0.1"
+              >
+              <mat-icon matPrefix class="vital-icon temperature">thermostat</mat-icon>
+              <span matSuffix>°C</span>
+              @if (enfermeriaForm.get('temperatura')?.hasError('min') || enfermeriaForm.get('temperatura')?.hasError('max')) {
+                <mat-error>Temperatura inválida (30-45 °C)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Presión arterial -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Presión Arterial</mat-label>
+              <input
+                matInput
+                formControlName="presion"
+                placeholder="Ej: 120/80"
+                maxlength="7"
+              >
+              <mat-icon matPrefix class="vital-icon pressure">favorite</mat-icon>
+              <span matSuffix>mmHg</span>
+              @if (enfermeriaForm.get('presion')?.hasError('pattern')) {
+                <mat-error>Formato inválido (use: 120/80)</mat-error>
+              }
+              <mat-hint>Formato: 120/80</mat-hint>
+            </mat-form-field>
+
+            <!-- Frecuencia cardíaca -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Frecuencia Cardíaca</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="frecuencia_cardiaca"
+                placeholder="Ej: 80"
+              >
+              <mat-icon matPrefix class="vital-icon heart">heart_plus</mat-icon>
+              <span matSuffix>lpm</span>
+              @if (enfermeriaForm.get('frecuencia_cardiaca')?.hasError('min') || enfermeriaForm.get('frecuencia_cardiaca')?.hasError('max')) {
+                <mat-error>FC inválida (30-220 lpm)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Frecuencia respiratoria -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Frecuencia Respiratoria</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="frecuencia_respiratoria"
+                placeholder="Ej: 16"
+              >
+              <mat-icon matPrefix class="vital-icon respiratory">air</mat-icon>
+              <span matSuffix>rpm</span>
+              @if (enfermeriaForm.get('frecuencia_respiratoria')?.hasError('min') || enfermeriaForm.get('frecuencia_respiratoria')?.hasError('max')) {
+                <mat-error>FR inválida (8-60 rpm)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Saturación -->
+            <mat-form-field appearance="outline" class="vital-field">
+              <mat-label>Saturación O₂</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="saturacion"
+                placeholder="Ej: 98"
+                step="0.1"
+              >
+              <mat-icon matPrefix class="vital-icon saturation">bloodtype</mat-icon>
+              <span matSuffix>%</span>
+              @if (enfermeriaForm.get('saturacion')?.hasError('min') || enfermeriaForm.get('saturacion')?.hasError('max')) {
+                <mat-error>Saturación inválida (0-100%)</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Procedimientos de enfermería -->
+      <mat-card class="procedures-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>medical_services</mat-icon>
+            <span>Procedimientos de Enfermería</span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="procedures-grid">
+
+            <!-- Inyectables -->
+            <mat-form-field appearance="outline" class="procedure-field">
+              <mat-label>Inyectables</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="inyectables"
+                min="0"
+              >
+              <mat-icon matPrefix class="procedure-icon">vaccines</mat-icon>
+              @if (enfermeriaForm.get('inyectables')?.hasError('min')) {
+                <mat-error>No puede ser negativo</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Sueros -->
+            <mat-form-field appearance="outline" class="procedure-field">
+              <mat-label>Sueros</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="sueros"
+                min="0"
+              >
+              <mat-icon matPrefix class="procedure-icon">water_drop</mat-icon>
+              @if (enfermeriaForm.get('sueros')?.hasError('min')) {
+                <mat-error>No puede ser negativo</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Curaciones -->
+            <mat-form-field appearance="outline" class="procedure-field">
+              <mat-label>Curaciones</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="curaciones"
+                min="0"
+              >
+              <mat-icon matPrefix class="procedure-icon">healing</mat-icon>
+              @if (enfermeriaForm.get('curaciones')?.hasError('min')) {
+                <mat-error>No puede ser negativo</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Otros procedimientos -->
+            <mat-form-field appearance="outline" class="procedure-field">
+              <mat-label>Otros Procedimientos</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="otras_enf"
+                min="0"
+              >
+              <mat-icon matPrefix class="procedure-icon">more_horiz</mat-icon>
+              @if (enfermeriaForm.get('otras_enf')?.hasError('min')) {
+                <mat-error>No puede ser negativo</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+
+          <!-- Resumen de procedimientos -->
+          <mat-divider style="margin: 20px 0;"></mat-divider>
+
+          <div class="procedures-summary">
+            <h4>Resumen de Procedimientos</h4>
+            <div class="summary-chips">
+              @if (enfermeriaForm.get('inyectables')?.value > 0) {
+                <mat-chip highlighted>
+                  <mat-icon>vaccines</mat-icon>
+                  {{ enfermeriaForm.get('inyectables')?.value }} Inyectable(s)
+                </mat-chip>
+              }
+              @if (enfermeriaForm.get('sueros')?.value > 0) {
+                <mat-chip highlighted>
+                  <mat-icon>water_drop</mat-icon>
+                  {{ enfermeriaForm.get('sueros')?.value }} Suero(s)
+                </mat-chip>
+              }
+              @if (enfermeriaForm.get('curaciones')?.value > 0) {
+                <mat-chip highlighted>
+                  <mat-icon>healing</mat-icon>
+                  {{ enfermeriaForm.get('curaciones')?.value }} Curación(es)
+                </mat-chip>
+              }
+              @if (enfermeriaForm.get('otras_enf')?.value > 0) {
+                <mat-chip highlighted>
+                  <mat-icon>more_horiz</mat-icon>
+                  {{ enfermeriaForm.get('otras_enf')?.value }} Otro(s)
+                </mat-chip>
+              }
+              @if (!enfermeriaForm.get('inyectables')?.value &&
+                   !enfermeriaForm.get('sueros')?.value &&
+                   !enfermeriaForm.get('curaciones')?.value &&
+                   !enfermeriaForm.get('otras_enf')?.value) {
+                <span class="no-procedures">Sin procedimientos registrados</span>
+              }
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="cancelar()"
+          [disabled]="guardando()"
+        >
+          <mat-icon>cancel</mat-icon>
+          Cancelar
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="enfermeriaForm.invalid || guardando()"
+        >
+          @if (guardando()) {
+            <ng-container>
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Guardando...</span>
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              <span>Guardar Consulta</span>
+            </ng-container>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+
+</div>

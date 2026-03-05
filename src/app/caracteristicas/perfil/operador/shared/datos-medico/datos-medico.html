@@ -1,0 +1,24 @@
+  <mat-card class="contenido-medico">
+    <mat-card-content>
+      <div class="contenido-medico-cabecera">
+        <div class="doctor-info">
+          <mat-icon class="doctor-icon">perm_contact_calendar</mat-icon>
+          <div>
+            <h2>{{ `${titulo()} ${empleado()?.paterno} ${empleado()?.materno}, ${empleado()?.nombres}` }}</h2>
+            <div class="patient-meta">
+              <mat-chip-set>
+                <mat-chip>
+                  <mat-icon>work</mat-icon>
+                  {{ empleado()?.cargo }}
+                </mat-chip>
+                <mat-chip>
+                  <mat-icon>assignment_ind</mat-icon>
+                  {{ empleado()?.registro_profesional }}
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>

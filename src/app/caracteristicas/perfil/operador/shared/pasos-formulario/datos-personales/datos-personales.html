@@ -1,0 +1,118 @@
+<mat-card class="step-card" [formGroup]="form">
+
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>person</mat-icon>
+      Información Personal
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div class="form-row">
+      <!-- Tipo documento -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Tipo de Documento</mat-label>
+        <input matInput formControlName="tipo">
+        <mat-icon matPrefix>badge</mat-icon>
+
+        @if (form.get('tipo')?.hasError('required')) {
+          <mat-error>Campo requerido</mat-error>
+        }
+      </mat-form-field>
+
+      <!-- CI -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Número de Documento</mat-label>
+        <input matInput formControlName="ci">
+        <mat-icon matPrefix>fingerprint</mat-icon>
+
+        @if (form.get('ci')?.hasError('required')) {
+          <mat-error>Campo requerido</mat-error>
+        }
+        @if (form.get('ci')?.hasError('pattern')) {
+          <mat-error>Solo números</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <!-- Apellido paterno -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Apellido Paterno</mat-label>
+        <input matInput formControlName="paterno">
+        <mat-icon matPrefix>person</mat-icon>
+      </mat-form-field>
+
+      <!-- Apellido materno -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Apellido Materno</mat-label>
+        <input matInput formControlName="materno">
+        <mat-icon matPrefix>person</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- Nombres -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombres</mat-label>
+      <input matInput formControlName="nombres">
+      <mat-icon matPrefix>badge</mat-icon>
+    </mat-form-field>
+
+    <div class="form-row">
+      <!-- Fecha nacimiento -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Fecha de Nacimiento</mat-label>
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="fecha_nacimiento"
+          [max]="fechaMaxima">
+        <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (edadPaciente) {
+          <mat-hint>Edad: {{ edadPaciente }}</mat-hint>
+        }
+      </mat-form-field>
+
+      <!-- Sexo -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Sexo</mat-label>
+        <mat-select formControlName="sexo">
+          <mat-option value="M">Masculino</mat-option>
+          <mat-option value="F">Femenino</mat-option>
+        </mat-select>
+        <mat-icon matPrefix>wc</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <!-- Estado civil -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Estado Civil</mat-label>
+        <mat-select formControlName="estado_civil">
+          @for (estado of estadosCiviles; track estado.codigo) {
+            <mat-option [value]="estado.codigo">
+              {{ estado.descripcion }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>favorite</mat-icon>
+      </mat-form-field>
+
+      <!-- Tipo sangre -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Tipo de Sangre</mat-label>
+        <mat-select formControlName="tipo_sangre">
+          @for (tipo of tiposSangre; track tipo.codigo) {
+            <mat-option [value]="tipo.codigo">
+              {{ tipo.descripcion }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-icon matPrefix>bloodtype</mat-icon>
+      </mat-form-field>
+    </div>
+
+  </mat-card-content>
+</mat-card>

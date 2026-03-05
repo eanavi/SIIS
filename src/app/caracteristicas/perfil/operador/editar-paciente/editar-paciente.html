@@ -1,0 +1,501 @@
+<!-- src/app/caracteristicas/pacientes/editar-paciente/editar-paciente.component.html -->
+
+<div class="editar-paciente-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">edit</mat-icon>
+      <div class="header-text">
+        <h1>Editar Paciente</h1>
+        @if (paciente()) {
+          <p>{{ nombreCompletoPaciente }} - CI: {{ paciente()?.ci }}</p>
+        } @else {
+          <p>Actualizar información del paciente</p>
+        }
+      </div>
+    </div>
+    <button
+      mat-stroked-button
+      (click)="cancelar()"
+      class="back-button"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+  @if (cargando()) {
+    <!-- Estado de carga -->
+    <mat-card class="loading-card">
+      <mat-card-content>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando información del paciente...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else if (error()) {
+    <!-- Estado de error -->
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h2>Error al cargar datos</h2>
+          <p>{{ error() }}</p>
+          <button mat-raised-button color="primary" (click)="cargarDatos()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+
+    <!-- Información rápida del paciente -->
+    <mat-card class="patient-info-card">
+      <mat-card-content>
+        <div class="patient-quick-info">
+          <mat-icon class="patient-avatar">account_circle</mat-icon>
+          <div class="patient-data">
+            <h3>{{ nombreCompletoPaciente }}</h3>
+            <div class="patient-chips">
+              <mat-chip>
+                <mat-icon>badge</mat-icon>
+                CI: {{ paciente()?.ci }}
+              </mat-chip>
+              <mat-chip>
+                <mat-icon>cake</mat-icon>
+                {{ edadPaciente }}
+              </mat-chip>
+              <mat-chip [class.male-chip]="paciente()?.sexo === 'M'" [class.female-chip]="paciente()?.sexo === 'F'">
+                <mat-icon>{{ paciente()?.sexo === 'M' ? 'male' : 'female' }}</mat-icon>
+                {{ paciente()?.sexo === 'M' ? 'Masculino' : 'Femenino' }}
+              </mat-chip>
+              <mat-chip highlighted>
+                <mat-icon>bloodtype</mat-icon>
+                {{ paciente()?.tipo_sangre }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Stepper con formularios -->
+    <mat-stepper #stepper linear>
+
+      <!-- Paso 1: Datos Personales -->
+      <mat-step [stepControl]="datosPersonalesForm" label="Datos Personales">
+        <form [formGroup]="datosPersonalesForm">
+          <mat-card class="step-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>person</mat-icon>
+                Información Personal
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+              <div class="form-row">
+                <!-- Tipo de documento -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Tipo de Documento</mat-label>
+                  <input matInput formControlName="tipo" placeholder="CI, Pasaporte, etc.">
+                  <mat-icon matPrefix>badge</mat-icon>
+                  @if (datosPersonalesForm.get('tipo')?.invalid && datosPersonalesForm.get('tipo')?.touched) {
+                    <mat-error>El tipo de documento es requerido</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- CI -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Número de Documento</mat-label>
+                  <input matInput formControlName="ci" placeholder="Ej: 12345678">
+                  <mat-icon matPrefix>fingerprint</mat-icon>
+                  @if (datosPersonalesForm.get('ci')?.hasError('required') && datosPersonalesForm.get('ci')?.touched) {
+                    <mat-error>El número de documento es requerido</mat-error>
+                  }
+                  @if (datosPersonalesForm.get('ci')?.hasError('pattern')) {
+                    <mat-error>Solo se permiten números</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <!-- Apellido paterno -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Apellido Paterno</mat-label>
+                  <input matInput formControlName="paterno">
+                  <mat-icon matPrefix>person</mat-icon>
+                  @if (datosPersonalesForm.get('paterno')?.invalid && datosPersonalesForm.get('paterno')?.touched) {
+                    <mat-error>Mínimo 2 caracteres</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- Apellido materno -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Apellido Materno</mat-label>
+                  <input matInput formControlName="materno">
+                  <mat-icon matPrefix>person</mat-icon>
+                  @if (datosPersonalesForm.get('materno')?.invalid && datosPersonalesForm.get('materno')?.touched) {
+                    <mat-error>Mínimo 2 caracteres</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <!-- Nombres -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombres</mat-label>
+                <input matInput formControlName="nombres">
+                <mat-icon matPrefix>badge</mat-icon>
+                @if (datosPersonalesForm.get('nombres')?.invalid && datosPersonalesForm.get('nombres')?.touched) {
+                  <mat-error>Mínimo 2 caracteres</mat-error>
+                }
+              </mat-form-field>
+
+              <div class="form-row">
+                <!-- Fecha de nacimiento -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Fecha de Nacimiento</mat-label>
+                  <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento" [max]="fechaMaxima">
+                  <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                  @if (edadPaciente) {
+                    <mat-hint>Edad: {{ edadPaciente }}</mat-hint>
+                  }
+                  @if (datosPersonalesForm.get('fecha_nacimiento')?.invalid && datosPersonalesForm.get('fecha_nacimiento')?.touched) {
+                    <mat-error>La fecha de nacimiento es requerida</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- Sexo -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Sexo</mat-label>
+                  <mat-select formControlName="sexo">
+                    <mat-option value="M">Masculino</mat-option>
+                    <mat-option value="F">Femenino</mat-option>
+                  </mat-select>
+                  <mat-icon matPrefix>wc</mat-icon>
+                  @if (datosPersonalesForm.get('sexo')?.invalid && datosPersonalesForm.get('sexo')?.touched) {
+                    <mat-error>El sexo es requerido</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <!-- Estado civil -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Estado Civil</mat-label>
+                  <mat-select formControlName="estado_civil">
+                    @for (estado of estadosCiviles(); track estado.codigo) {
+                      <mat-option [value]="estado.codigo.toString()">{{ estado.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>favorite</mat-icon>
+                  @if (datosPersonalesForm.get('estado_civil')?.invalid && datosPersonalesForm.get('estado_civil')?.touched) {
+                    <mat-error>El estado civil es requerido</mat-error>
+                  }
+                </mat-form-field>
+
+                <!-- Tipo de sangre -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Tipo de Sangre</mat-label>
+                  <mat-select formControlName="tipo_sangre">
+                    @for (tipo of tiposSangre(); track tipo.codigo) {
+                      <mat-option [value]="tipo.codigo.toString()">{{ tipo.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>bloodtype</mat-icon>
+                  @if (datosPersonalesForm.get('tipo_sangre')?.invalid && datosPersonalesForm.get('tipo_sangre')?.touched) {
+                    <mat-error>El tipo de sangre es requerido</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+
+          <div class="step-actions">
+            <button mat-button (click)="cancelar()" type="button">Cancelar</button>
+            <button mat-raised-button color="primary" matStepperNext type="button">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Paso 2: Contacto y Dirección -->
+      <mat-step [stepControl]="contactoForm" label="Contacto">
+        <form [formGroup]="contactoForm">
+          <mat-card class="step-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>contact_phone</mat-icon>
+                Información de Contacto
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+              <!-- Teléfonos -->
+              <div class="form-section">
+                <h3>Teléfonos</h3>
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Celular</mat-label>
+                    <input matInput formControlName="celular" placeholder="Ej: 71234567">
+                    <mat-icon matPrefix>phone_android</mat-icon>
+                    @if (contactoForm.get('celular')?.hasError('required') && contactoForm.get('celular')?.touched) {
+                      <mat-error>El celular es requerido</mat-error>
+                    }
+                    @if (contactoForm.get('celular')?.hasError('pattern')) {
+                      <mat-error>Debe tener 8-10 dígitos</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Teléfono Fijo (Opcional)</mat-label>
+                    <input matInput formControlName="fijo" placeholder="Ej: 2123456">
+                    <mat-icon matPrefix>phone</mat-icon>
+                    @if (contactoForm.get('fijo')?.hasError('pattern')) {
+                      <mat-error>Debe tener 7-10 dígitos</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <mat-divider style="margin: 20px 0;"></mat-divider>
+
+              <!-- Correos -->
+              <div class="form-section">
+                <h3>Correos Electrónicos</h3>
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Correo Personal (Opcional)</mat-label>
+                    <input matInput formControlName="correo_personal" type="email" placeholder="correo@ejemplo.com">
+                    <mat-icon matPrefix>email</mat-icon>
+                    @if (contactoForm.get('correo_personal')?.hasError('email')) {
+                      <mat-error>Correo inválido</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Correo Domicilio (Opcional)</mat-label>
+                    <input matInput formControlName="correo_domicilio" type="email" placeholder="correo@ejemplo.com">
+                    <mat-icon matPrefix>alternate_email</mat-icon>
+                    @if (contactoForm.get('correo_domicilio')?.hasError('email')) {
+                      <mat-error>Correo inválido</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <mat-divider style="margin: 20px 0;"></mat-divider>
+
+              <!-- Direcciones -->
+              <div class="form-section">
+                <div class="section-header">
+                  <h3>
+                    <mat-icon>home</mat-icon>
+                    Direcciones
+                  </h3>
+                  @if (direccionesArray.length < 3) {
+                    <button
+                      mat-stroked-button
+                      type="button"
+                      (click)="agregarDireccion()"
+                    >
+                      <mat-icon>add</mat-icon>
+                      Agregar dirección
+                    </button>
+                  }
+                </div>
+
+                <div formArrayName="direcciones">
+                  @for (direccion of direccionesArray.controls; track $index) {
+                    <div class="direccion-item" [formGroupName]="$index">
+                      <div class="direccion-header">
+                        <span>Dirección {{ $index + 1 }}</span>
+                        @if (direccionesArray.length > 1) {
+                          <button
+                            mat-icon-button
+                            color="warn"
+                            type="button"
+                            (click)="eliminarDireccion($index)"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        }
+                      </div>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field-double">
+                          <mat-label>Calle/Avenida</mat-label>
+                          <input matInput formControlName="calle">
+                          <mat-icon matPrefix>signpost</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field-simple">
+                          <mat-label>Número</mat-label>
+                          <input matInput formControlName="numero">
+                          <mat-icon matPrefix>tag</mat-icon>
+                        </mat-form-field>
+                      </div>
+
+                      <div class="form-row">
+                        <mat-form-field appearance="outline" class="form-field">
+                          <mat-label>Zona</mat-label>
+                          <input matInput formControlName="zona">
+                          <mat-icon matPrefix>location_on</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field">
+                          <mat-label>Tipo</mat-label>
+                          <mat-select formControlName="tipo">
+                            <mat-option value="personal">Personal</mat-option>
+                            <mat-option value="trabajo">Trabajo</mat-option>
+                            <mat-option value="familiar">Familiar</mat-option>
+                          </mat-select>
+                          <mat-icon matPrefix>category</mat-icon>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+            </mat-card-content>
+          </mat-card>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Anterior
+            </button>
+            <button mat-raised-button color="primary" matStepperNext type="button">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+      <!-- Paso 3: Datos Adicionales -->
+      <mat-step [stepControl]="datosAdicionalesForm" label="Datos Adicionales">
+        <form [formGroup]="datosAdicionalesForm">
+          <mat-card class="step-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>info</mat-icon>
+                Información Adicional
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+
+              <div class="form-row">
+                <!-- Ocupación -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Ocupación</mat-label>
+                  <mat-select formControlName="ocupacion">
+                    @for (ocupacion of ocupaciones(); track ocupacion.codigo) {
+                      <mat-option [value]="ocupacion.codigo">{{ ocupacion.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>work</mat-icon>
+                </mat-form-field>
+
+                <!-- Nivel de estudios -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Nivel de Estudios</mat-label>
+                  <mat-select formControlName="nivel_estudios">
+                    @for (nivel of nivelesEstudio(); track nivel.codigo) {
+                      <mat-option [value]="nivel.codigo">{{ nivel.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>school</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <!-- Idioma hablado -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Idioma Hablado</mat-label>
+                  <mat-select formControlName="idioma_hablado">
+                    @for (idioma of idiomas(); track idioma.codigo) {
+                      <mat-option [value]="idioma.codigo">{{ idioma.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>language</mat-icon>
+                </mat-form-field>
+
+                <!-- Idioma materno -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Idioma Materno</mat-label>
+                  <mat-select formControlName="idioma_materno">
+                    @for (idioma of idiomasMaternos(); track idioma.codigo) {
+                      <mat-option [value]="idioma.codigo">{{ idioma.descripcion }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-icon matPrefix>translate</mat-icon>
+                </mat-form-field>
+              </div>
+
+              <!-- Autopertenencia -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Autopertenencia</mat-label>
+                <mat-select formControlName="autopertenencia">
+                  @for (auto of autopertenencias(); track auto.codigo) {
+                    <mat-option [value]="auto.codigo">{{ auto.descripcion }}</mat-option>
+                  }
+                </mat-select>
+                <mat-icon matPrefix>groups</mat-icon>
+              </mat-form-field>
+
+              <!-- Gestión comunitaria -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Gestión Comunitaria (Opcional)</mat-label>
+                <textarea
+                  matInput
+                  formControlName="gestion_comunitaria"
+                  rows="3"
+                  placeholder="Información sobre participación comunitaria..."
+                ></textarea>
+                <mat-icon matPrefix>diversity_3</mat-icon>
+              </mat-form-field>
+
+            </mat-card-content>
+          </mat-card>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Anterior
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="actualizarPaciente()"
+              [disabled]="guardando()"
+              type="button"
+            >
+              @if (guardando()) {
+                <ng-container>
+                  <mat-spinner diameter="20"></mat-spinner>
+                  <span>Guardando...</span>
+                </ng-container>
+              } @else {
+                <ng-container>
+                  <mat-icon>save</mat-icon>
+                  <span>Guardar Cambios</span>
+                </ng-container>
+              }
+            </button>
+          </div>
+        </form>
+      </mat-step>
+
+    </mat-stepper>
+  }
+
+</div>

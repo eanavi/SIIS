@@ -1,0 +1,36 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon [color]="config.color">
+    {{ config.icono }}
+  </mat-icon>
+  {{ data.titulo || 'Confirmar acción' }}
+</h2>
+
+<mat-dialog-content>
+  <p>{{ data.mensaje }}</p>
+
+  @if (data.requiereTexto) {
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Escriba {{ data.textoValidacion }} para confirmar</mat-label>
+      <input matInput (input)="textoIngresado.set($any($event.target).value)">
+    </mat-form-field>
+  }
+
+  @if (segundaConfirmacion()) {
+    <p class="segunda-alerta">
+      Esta acción es irreversible. ¿Está completamente seguro?
+    </p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">
+    {{ data.textoCancelar || 'Cancelar' }}
+  </button>
+
+  <button
+    mat-raised-button
+    [color]="config.color"
+    (click)="confirmar()">
+    {{ data.textoConfirmar || config.textoConfirmar }}
+  </button>
+</mat-dialog-actions>

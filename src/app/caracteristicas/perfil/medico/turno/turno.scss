@@ -1,0 +1,555 @@
+// src/app/caracteristicas/turno/turno.component.scss
+
+.turnos-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Header Card
+.header-card {
+  margin-bottom: 24px;
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .doctor-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .doctor-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--mat-sys-primary);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .doctor-name {
+      margin: 4px 0 0 0;
+      color: var(--mat-sys-on-surface-variant);
+      font-size: 14px;
+    }
+  }
+
+  mat-chip {
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+// Search Card
+.search-card {
+  margin-bottom: 24px;
+
+  .search-form {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    .date-field {
+      flex: 1;
+      min-width: 250px;
+      margin: 0;
+    }
+
+    .search-button,
+    button[type="button"] {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+
+      mat-spinner {
+        display: inline-block;
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .date-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    .info-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    span {
+      font-size: 14px;
+      color: var(--mat-sys-on-surface-variant);
+
+      strong {
+        color: var(--mat-sys-on-surface);
+      }
+    }
+  }
+}
+
+// Table Card
+.table-card {
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .turnos-table {
+    width: 100%;
+
+    th {
+      font-weight: 600;
+      color: var(--mat-sys-on-surface-variant);
+      background: rgba(0, 0, 0, 0.04);
+      padding: 16px;
+    }
+
+    td {
+      padding: 16px;
+    }
+
+    .table-row {
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+
+      &.active-row {
+        background-color: rgba(102, 126, 234, 0.08);
+        border-left: 4px solid var(--mat-sys-primary);
+      }
+    }
+
+    // Día de la semana
+    .dia-info {
+      mat-chip {
+        &.turno-activo {
+          background-color: var(--mat-sys-primary);
+          color: white;
+          animation: pulse 2s infinite;
+
+          mat-icon {
+            color: white;
+          }
+
+          .active-indicator {
+            animation: blink 1.5s infinite;
+          }
+        }
+      }
+    }
+
+    .fecha-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .fecha-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: var(--mat-sys-primary);
+  }
+
+  .fecha-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-size: 15px;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .badge-hoy {
+      background-color: #4caf50;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      height: auto;
+      min-height: 20px;
+    }
+
+    .badge-futuro {
+      background-color: #2196f3;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      height: auto;
+      min-height: 20px;
+    }
+
+    .badge-pasado {
+      background-color: #9e9e9e;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      height: auto;
+      min-height: 20px;
+    }
+  }
+}
+
+// Estilos para filas según estado
+.future-row {
+  border-left: 3px solid #2196f3;
+}
+
+.past-row {
+  opacity: 0.6;
+  border-left: 3px solid #9e9e9e;
+}
+
+    // Hora info
+    .hora-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .hora-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--mat-sys-primary);
+      }
+
+      strong {
+        font-size: 16px;
+        color: var(--mat-sys-on-surface);
+      }
+    }
+
+    // Acciones
+    .actions-container {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .duration-chip {
+        mat-chip {
+          mat-icon {
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading State
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  p {
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+}
+
+// Error State
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .error-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--mat-sys-error);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: var(--mat-sys-on-surface);
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// Empty State
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: var(--mat-sys-on-surface);
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// Animaciones
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .turnos-container {
+    padding: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .search-form {
+    flex-direction: column;
+    width: 100%;
+
+    .date-field {
+      width: 100%;
+    }
+
+    .search-button,
+    button[type="button"] {
+      width: 100%;
+    }
+  }
+
+  .turnos-table {
+    // Hacer la tabla scrolleable horizontalmente en móviles
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+
+    .actions-container {
+      flex-direction: column;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  // Ocultar algunas columnas en móvil
+  .turnos-table {
+    .hora-icon {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .doctor-info {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .date-info {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+}
+
+// Estilos para el datepicker
+::ng-deep {
+  .mat-datepicker-content {
+    .mat-calendar {
+      .mat-calendar-body-selected {
+        background-color: var(--mat-sys-primary);
+        color: white;
+      }
+
+      .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+        border-color: var(--mat-sys-primary);
+      }
+    }
+  }
+}
+
+// Mejoras para accesibilidad
+.turnos-table {
+  tr {
+    &:focus {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: -2px;
+    }
+  }
+
+  button {
+    &:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Efecto hover mejorado para botones
+button[mat-raised-button],
+button[mat-stroked-button] {
+  transition: all 0.2s ease;
+
+  &:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Estilos para chips de duración
+.duration-chip {
+  mat-chip {
+    background-color: rgba(102, 126, 234, 0.1);
+    color: var(--mat-sys-primary);
+    font-weight: 500;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+    }
+  }
+}
+
+// Mejora visual para la tabla
+.turnos-table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+// Indicador de turno activo más prominente
+.active-row {
+  position: relative;
+
+  //&::before {
+    //content: 'TURNO ACTIVO';
+    //position: absolute;
+    //top: 8px;
+    //right: 8px;
+    //background: var(--mat-sys-primary);
+    //color: white;
+    //padding: 4px 12px;
+    //border-radius: 12px;
+    //font-size: 11px;
+    //font-weight: 600;
+    //letter-spacing: 0.5px;
+    //animation: fadeIn 0.3s ease;
+  //}
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+

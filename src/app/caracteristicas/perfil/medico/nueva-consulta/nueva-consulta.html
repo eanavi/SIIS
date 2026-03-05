@@ -1,0 +1,463 @@
+<!-- src/app/caracteristicas/consultas/nueva-consulta/nueva-consulta.component.html -->
+
+<div class="nueva-consulta-container">
+
+  @if (cargando()) {
+    <!-- Estado de carga -->
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p>Cargando información del paciente...</p>
+    </div>
+  } @else if (error()) {
+    <!-- Estado de error -->
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h2>Error al cargar datos</h2>
+          <p>{{ error() }}</p>
+          <button mat-raised-button color="primary" (click)="cargarDatos()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <!-- Contenido principal -->
+
+    <!-- Header con información del paciente -->
+    <mat-card class="patient-header">
+      <mat-card-content>
+        <div class="patient-info-header">
+          <div class="patient-main-info">
+            <mat-icon class="patient-avatar">account_circle</mat-icon>
+            <div class="patient-details">
+              <h2>{{ nombreCompletoPaciente }}</h2>
+              <div class="patient-meta">
+                <mat-chip-set>
+                  <mat-chip>
+                    <mat-icon>badge</mat-icon>
+                    CI: {{ paciente()?.ci }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon [class.male]="paciente()?.sexo === 'M'" [class.female]="paciente()?.sexo === 'F'">
+                      {{ paciente()?.sexo === 'M' ? 'male' : 'female' }}
+                    </mat-icon>
+                    {{ paciente()?.sexo === 'M' ? 'Masculino' : 'Femenino' }}
+                  </mat-chip>
+                  <mat-chip>
+                    <mat-icon>cake</mat-icon>
+                    {{ edadPaciente }}
+                  </mat-chip>
+                  <mat-chip highlighted>
+                    <mat-icon>water_drop</mat-icon>
+                    Tipo: {{ paciente()?.tipo_sangre }}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
+            </div>
+          </div>
+
+          <div class="consultation-date">
+            <mat-icon>event</mat-icon>
+            <span>{{ consulta()?.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Signos vitales y datos de enfermería -->
+    <mat-card class="vital-signs-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>monitor_heart</mat-icon>
+          <span>Signos Vitales y Datos de Enfermería</span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="vital-signs-grid">
+
+          <!-- Peso -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon weight">monitor_weight</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Peso</span>
+              <span class="vital-value">{{ consulta()?.peso }} kg</span>
+            </div>
+          </div>
+
+          <!-- Talla -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon height">height</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Talla</span>
+              <span class="vital-value">{{ consulta()?.talla }} m</span>
+            </div>
+          </div>
+
+          <!-- IMC -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon imc">calculate</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">IMC</span>
+              <span class="vital-value">
+                {{ calcularIMC() }}
+                <small>{{ obtenerClasificacionIMC() }}</small>
+              </span>
+            </div>
+          </div>
+
+          <!-- Temperatura -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon temperature">thermostat</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Temperatura</span>
+              <span class="vital-value">{{ consulta()?.temperatura }}°C</span>
+            </div>
+          </div>
+
+          <!-- Presión arterial -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon pressure">favorite</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Presión Arterial</span>
+              <span class="vital-value">{{ consulta()?.presion }} mmHg</span>
+            </div>
+          </div>
+
+          <!-- Frecuencia cardíaca -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon heart">heart_plus</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Frecuencia Cardíaca</span>
+              <span class="vital-value">{{ consulta()?.frecuencia_cardiaca }} lpm</span>
+            </div>
+          </div>
+
+          <!-- Frecuencia respiratoria -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon respiratory">air</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Frecuencia Respiratoria</span>
+              <span class="vital-value">{{ consulta()?.frecuencia_respiratoria }} rpm</span>
+            </div>
+          </div>
+
+          <!-- Saturación -->
+          <div class="vital-sign-item">
+            <mat-icon class="vital-icon saturation">bloodtype</mat-icon>
+            <div class="vital-content">
+              <span class="vital-label">Saturación O₂</span>
+              <span class="vital-value">{{ consulta()?.saturacion }}%</span>
+            </div>
+          </div>
+
+        </div>
+
+        <mat-divider style="margin: 20px 0;"></mat-divider>
+
+        <!-- Procedimientos de enfermería -->
+        <div class="nursing-procedures">
+          <h3>Procedimientos de Enfermería</h3>
+          <div class="procedures-chips">
+            @if (consulta()?.inyectables) {
+              <mat-chip highlighted>
+                <mat-icon>vaccines</mat-icon>
+                Inyectables: {{ consulta()?.inyectables }}
+              </mat-chip>
+            }
+            @if (consulta()?.sueros) {
+              <mat-chip highlighted>
+                <mat-icon>water_drop</mat-icon>
+                Sueros: {{ consulta()?.sueros }}
+              </mat-chip>
+            }
+            @if (consulta()?.curaciones) {
+              <mat-chip highlighted>
+                <mat-icon>healing</mat-icon>
+                Curaciones: {{ consulta()?.curaciones }}
+              </mat-chip>
+            }
+            @if (consulta()?.otras_enf) {
+              <mat-chip highlighted>
+                <mat-icon>medical_services</mat-icon>
+                Otros: {{ consulta()?.otras_enf }}
+              </mat-chip>
+            }
+            @if (!consulta()?.inyectables && !consulta()?.sueros && !consulta()?.curaciones && !consulta()?.otras_enf) {
+              <span class="no-procedures">Sin procedimientos registrados</span>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    @if(!cargando() && !error()){
+      <mat-card class="fhir-export-card">
+        <mat-card-content>
+          <div class="fhir-export-section">
+            <div class="fhir-info">
+              <mat-icon class="fhir-icon">cloud_upload</mat-icon>
+              <h3>Interoperabilidad FHIR R5</h3>
+              <p>Exporta esta consulta en formato HL7, FHIR para compartir con tros sistemas de salud </p>
+            </div>
+          </div>
+
+          <div class="fhir-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="exportarAFHIR()"
+              [disabled]="exportando() || !consulta()"
+              matTooltip="Descargar consulta en formato FHIR R5"
+            >
+            @if(exportando()) {
+              <ng-container>
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Exportando...</span>
+              </ng-container>
+            } @else {
+              <ng-container>
+                <mat-icon>download</mat-icon>
+                <span>Descargar FHIR</span>
+              </ng-container>
+            }
+          </button>
+
+          <button
+            mat-button
+            [matMenuTriggerFor]="fhirMenu"
+            [disabled]="!consulta()"
+            >
+            <mat-icon>more_vert</mat-icon>
+            <span>Más opciones</span>
+          </button>
+
+          <mat-menu #fhirMenu = "matMenu">
+            <button mat-menu-item (click)="verPreviewFHIR()">
+              <mat-icon>visibility</mat-icon>
+              <span>Ver en consola</span>
+            </button>
+            <button mat-menu-item (click)="copiarFHIRAPortapapeles()">
+              <mat-icon>content_copy</mat-icon>
+              <span>Copiar JSON</span>
+            </button>
+          </mat-menu>
+          </div>
+
+
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Formulario de consulta médica -->
+    <form [formGroup]="consultaForm" (ngSubmit)="guardarConsulta()">
+
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>edit_note</mat-icon>
+            <span>Consulta Médica</span>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <!-- Motivo de consulta -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Motivo de Consulta</mat-label>
+            <textarea
+              matInput
+              formControlName="motivo"
+              rows="3"
+              placeholder="Describa el motivo de la consulta..."
+            ></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+            @if (consultaForm.get('motivo')?.invalid && consultaForm.get('motivo')?.touched) {
+              <mat-error>El motivo es requerido (mínimo 10 caracteres)</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Examen físico -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Examen Físico</mat-label>
+            <textarea
+              matInput
+              formControlName="ex_fisico"
+              rows="4"
+              placeholder="Describa los hallazgos del examen físico..."
+            ></textarea>
+            <mat-icon matPrefix>stethoscope</mat-icon>
+            @if (consultaForm.get('ex_fisico')?.invalid && consultaForm.get('ex_fisico')?.touched) {
+              <mat-error>El examen físico es requerido (mínimo 10 caracteres)</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="form-row">
+            <!-- Diagnóstico -->
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Diagnóstico</mat-label>
+              <textarea
+                matInput
+                formControlName="diagnostico"
+                rows="3"
+                placeholder="Diagnóstico médico..."
+              ></textarea>
+              <mat-icon matPrefix>local_hospital</mat-icon>
+              @if (consultaForm.get('diagnostico')?.invalid && consultaForm.get('diagnostico')?.touched) {
+                <mat-error>El diagnóstico es requerido (mínimo 5 caracteres)</mat-error>
+              }
+            </mat-form-field>
+
+            <!-- Tratamiento -->
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Tratamiento</mat-label>
+              <textarea
+                matInput
+                formControlName="tratamiento"
+                rows="3"
+                placeholder="Tratamiento prescrito..."
+              ></textarea>
+              <mat-icon matPrefix>medication</mat-icon>
+              @if (consultaForm.get('tratamiento')?.invalid && consultaForm.get('tratamiento')?.touched) {
+                <mat-error>El tratamiento es requerido (mínimo 5 caracteres)</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-divider style="margin: 20px 0;"></mat-divider>
+
+          <!-- Códigos CIE-10 -->
+          <div class="cie10-section">
+            <div class="section-header">
+              <h3>
+                <mat-icon>code</mat-icon>
+                Códigos CIE-10
+              </h3>
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="agregarCodigoCie10()"
+                matTooltip="Agregar código CIE-10"
+              >
+                <mat-icon>add</mat-icon>
+                Agregar código
+              </button>
+            </div>
+
+            <div class="cie10-list" formArrayName="dx_cie10">
+              @for (control of dx_cie10Array.controls; track $index) {
+                <div class="cie10-item">
+                  <mat-form-field appearance="outline" class="cie10-input">
+                    <mat-label>Código CIE-10 {{ $index + 1 }}</mat-label>
+                    <input
+                      matInput
+                      [formControlName]="$index"
+                      placeholder="Ej: A09, R51, J00"
+                      maxlength="10"
+                    >
+                    <mat-icon matPrefix>label</mat-icon>
+                  </mat-form-field>
+
+                  @if (dx_cie10Array.length > 1) {
+                    <button
+                      mat-icon-button
+                      type="button"
+                      color="warn"
+                      (click)="eliminarCodigoCie10($index)"
+                      matTooltip="Eliminar código"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  }
+                </div>
+              }
+            </div>
+          </div>
+
+          <mat-divider style="margin: 20px 0;"></mat-divider>
+
+          <div class="form-row">
+            <!-- Mortalidad -->
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Mortalidad</mat-label>
+              <mat-select formControlName="mortalidad">
+                <mat-option value="N">No</mat-option>
+                <mat-option value="S">Sí</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>warning</mat-icon>
+            </mat-form-field>
+
+            <!-- Referencia -->
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Referencia</mat-label>
+              <mat-select formControlName="referencia">
+                @for (opcion of opcionesReferencia; track opcion.valor) {
+                  <mat-option [value]="opcion.valor">
+                    {{ opcion.etiqueta }}
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-icon matPrefix>local_hospital</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>Subsidio</mat-label>
+              <mat-select formControlName="subsidio">
+                <mat-option value="1">1</mat-option>
+                <mat-option value="2">2</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>monetization_on</mat-icon>
+            </mat-form-field>
+
+          </div>
+
+          <!-- Observaciones -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Observaciones</mat-label>
+            <textarea
+              matInput
+              formControlName="observaciones"
+              rows="3"
+              placeholder="Observaciones adicionales (opcional)..."
+            ></textarea>
+            <mat-icon matPrefix>note</mat-icon>
+          </mat-form-field>
+
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Botones de acción -->
+      <div class="action-buttons">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="cancelar()"
+          [disabled]="guardando()"
+        >
+          <mat-icon>cancel</mat-icon>
+          Cancelar
+        </button>
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="consultaForm.invalid || guardando()"
+        >
+          @if (guardando()) {
+            <ng-container>
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Guardando...</span>
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              <span>Guardar Consulta</span>
+            </ng-container>
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>

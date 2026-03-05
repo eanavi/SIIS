@@ -1,0 +1,386 @@
+// src/app/caracteristicas/pacientes/lista-pacientes/lista-pacientes.component.scss
+
+.lista-pacientes-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Page header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+
+    .header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--mat-sys-primary);
+    }
+
+    .header-text {
+      h1 {
+        margin: 0 0 4px 0;
+        font-size: 28px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+    }
+  }
+
+  .nuevo-button {
+    height: 48px;
+    min-width: 180px;
+    font-size: 16px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Search card
+.search-card {
+  margin-bottom: 24px;
+
+  .search-form {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 300px;
+      margin: 0;
+    }
+
+    .search-stats {
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+
+      mat-chip-set {
+        mat-chip {
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Table card
+.table-card {
+  mat-card-content {
+    padding: 0;
+  }
+}
+
+// Loading state
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+
+  p {
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+}
+
+// Error state
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .error-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: var(--mat-sys-error);
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: var(--mat-sys-on-surface);
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// Empty state
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 80px;
+    width: 80px;
+    height: 80px;
+    color: var(--mat-sys-on-surface-variant);
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  h3 {
+    margin: 0 0 8px 0;
+    color: var(--mat-sys-on-surface);
+  }
+
+  p {
+    margin: 0 0 24px 0;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Table
+.table-container {
+  overflow-x: auto;
+
+  .pacientes-table {
+    width: 100%;
+
+    th {
+      background: rgba(0, 0, 0, 0.02);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--mat-sys-on-surface);
+      padding: 16px;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .table-row {
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+    }
+
+    // CI cell
+    .ci-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .ci-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--mat-sys-primary);
+      }
+
+      .ci-number {
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+    }
+
+    // Nombre cell
+    .nombre-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .avatar-icon {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+
+      .nombre-text {
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+    }
+
+    // Edad cell
+    .edad-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--mat-sys-on-surface-variant);
+
+      .edad-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    // Sexo chips
+    .male-chip {
+      background-color: rgba(33, 150, 243, 0.12) !important;
+      color: #1976d2 !important;
+
+      mat-icon {
+        color: #1976d2 !important;
+      }
+    }
+
+    .female-chip {
+      background-color: rgba(233, 30, 99, 0.12) !important;
+      color: #c2185b !important;
+
+      mat-icon {
+        color: #c2185b !important;
+      }
+    }
+
+    // Acciones cell
+    .acciones-cell {
+      display: flex;
+      gap: 4px;
+    }
+  }
+}
+
+// Paginator
+.table-paginator {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .lista-pacientes-container {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .header-content {
+      .header-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .header-text {
+        h1 {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .nuevo-button {
+      width: 100%;
+    }
+  }
+
+  .search-form {
+    flex-direction: column;
+
+    .search-field {
+      width: 100%;
+    }
+
+    .search-stats {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .table-container {
+    .pacientes-table {
+      min-width: 600px;
+
+      .nombre-cell {
+        .nombre-text {
+          font-size: 14px;
+        }
+      }
+
+      .edad-cell {
+        font-size: 12px;
+
+        span {
+          display: none;
+        }
+
+        .edad-icon {
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
+}
+
+// Snackbar styles
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .info-snackbar {
+    background-color: #2196f3 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+}

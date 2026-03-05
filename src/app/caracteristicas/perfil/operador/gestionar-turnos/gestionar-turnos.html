@@ -1,0 +1,298 @@
+<!-- src/app/caracteristicas/turnos/gestionar-turnos/gestionar-turnos.component.html -->
+
+<div class="gestionar-turnos-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">schedule</mat-icon>
+      <div class="header-text">
+        <h1>Turnos del Personal Médico</h1>
+        <p>Configurar horarios de atención del personal médico</p>
+      </div>
+    </div>
+    <button
+      mat-stroked-button
+      (click)="cancelar()"
+      class="back-button"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </button>
+  </div>
+
+
+  <app-datos-medico [empleado]="empleado()"> >
+  </app-datos-medico>
+
+  @if (cargando()) {
+    <!-- Estado de carga -->
+    <mat-card class="loading-card">
+      <mat-card-content>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando prestaciones disponibles...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else if (error()) {
+    <!-- Estado de error -->
+    <mat-card class="error-card">
+      <mat-card-content>
+        <div class="error-content">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h2>Error al cargar datos</h2>
+          <p>{{ error() }}</p>
+          <button mat-raised-button color="primary" (click)="cargarPrestaciones()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+
+    <!-- Formulario de nuevo turno -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>add_circle</mat-icon>
+          Agregar Turno
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="turnoForm">
+
+          <!-- Prestación -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Prestación / Servicio</mat-label>
+            <mat-select formControlName="id_prestacion">
+              @for (prestacion of prestaciones(); track prestacion.id_prestacion) {
+                <mat-option [value]="prestacion.id_prestacion">
+                  <strong>{{ prestacion.sigla }}</strong> - {{ prestacion.nombre_prestacion }}
+                </mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>medical_services</mat-icon>
+            @if (turnoForm.get('id_prestacion')?.invalid && turnoForm.get('id_prestacion')?.touched) {
+              <mat-error>Seleccione una prestación</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Rango de fechas -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Fecha de Inicio</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerInicio"
+                formControlName="fecha_inicio"
+              >
+              <mat-datepicker-toggle matIconPrefix [for]="pickerInicio"></mat-datepicker-toggle>
+              <mat-datepicker #pickerInicio></mat-datepicker>
+              @if (turnoForm.get('fecha_inicio')?.invalid && turnoForm.get('fecha_inicio')?.touched) {
+                <mat-error>Fecha de inicio requerida</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Fecha Final</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerFinal"
+                formControlName="fecha_final"
+              >
+              <mat-datepicker-toggle matIconPrefix [for]="pickerFinal"></mat-datepicker-toggle>
+              <mat-datepicker #pickerFinal></mat-datepicker>
+              @if (turnoForm.get('fecha_final')?.invalid && turnoForm.get('fecha_final')?.touched) {
+                <mat-error>Fecha final requerida</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Horarios -->
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Hora de Inicio</mat-label>
+              <input
+                matInput
+                type="time"
+                formControlName="hora_inicio"
+                placeholder="08:00"
+              >
+              <mat-icon matPrefix>schedule</mat-icon>
+              @if (turnoForm.get('hora_inicio')?.invalid && turnoForm.get('hora_inicio')?.touched) {
+                <mat-error>Hora de inicio requerida (formato HH:MM)</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Hora Final</mat-label>
+              <input
+                matInput
+                type="time"
+                formControlName="hora_final"
+                placeholder="17:00"
+              >
+              <mat-icon matPrefix>schedule</mat-icon>
+              @if (turnoForm.get('hora_final')?.invalid && turnoForm.get('hora_final')?.touched) {
+                <mat-error>Hora final requerida (formato HH:MM)</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <mat-divider style="margin: 20px 0;"></mat-divider>
+
+          <!-- Días de la semana -->
+          <div class="dias-semana-section">
+            <h3>
+              <mat-icon>calendar_today</mat-icon>
+              Días de Atención
+            </h3>
+            <div class="dias-grid">
+              @for (dia of diasSemana; track dia.codigo) {
+                <div
+                  class="dia-item"
+                  [class.selected]="dia.seleccionado"
+                  (click)="toggleDia(dia)"
+                  matTooltip="{{ dia.nombre }}"
+                >
+                  <span class="dia-abrev">{{ dia.abreviatura }}</span>
+                  <mat-icon class="check-icon">
+                    {{ dia.seleccionado ? 'check_circle' : 'radio_button_unchecked' }}
+                  </mat-icon>
+                </div>
+              }
+            </div>
+            @if (diasSeleccionados.length > 0) {
+              <div class="dias-seleccionados">
+                <span>Días seleccionados:</span>
+                <mat-chip-set>
+                  @for (dia of diasSeleccionados; track dia.codigo) {
+                    <mat-chip highlighted>
+                      {{ dia.nombre }}
+                    </mat-chip>
+                  }
+                </mat-chip-set>
+              </div>
+            }
+          </div>
+
+          <!-- Botón agregar -->
+          <div class="add-button-container">
+            <button
+              mat-raised-button
+              color="accent"
+              type="button"
+              (click)="agregarTurno()"
+              [disabled]="turnoForm.invalid || diasSeleccionados.length === 0"
+            >
+              <mat-icon>add</mat-icon>
+              Agregar Turno a la Lista
+            </button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Lista de turnos agregados -->
+    @if (turnosAgregados().length > 0) {
+      <mat-card class="turnos-list-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>list</mat-icon>
+            Turnos Agregados ({{ turnosAgregados().length }})
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="turnos-list">
+            @for (turno of turnosAgregados(); track $index) {
+              <div class="turno-item">
+                <div class="turno-header">
+                  <div class="turno-prestacion">
+                    <mat-chip highlighted color="primary">
+                      <mat-icon>medical_services</mat-icon>
+                      {{ turno.sigla }}
+                    </mat-chip>
+                    <span class="prestacion-nombre">{{ turno.nombre_prestacion }}</span>
+                  </div>
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="eliminarTurno($index)"
+                    matTooltip="Eliminar turno"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+
+                <div class="turno-details">
+                  <div class="detail-item">
+                    <mat-icon>event</mat-icon>
+                    <span>{{ turno.fecha_inicio | date:'dd/MM/yyyy' }} - {{ turno.fecha_final | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                  <div class="detail-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>{{ turno.hora_inicio.slice(0, 5) }} - {{ turno.hora_final.slice(0, 5) }}</span>
+                  </div>
+                  <div class="detail-item dias">
+                    <mat-icon>calendar_today</mat-icon>
+                    <div class="dias-chips">
+                      @for (dia of turno.dias_nombres; track dia) {
+                        <mat-chip>{{ dia }}</mat-chip>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    } @else {
+      <mat-card class="empty-card">
+        <mat-card-content>
+          <div class="empty-state">
+            <mat-icon class="empty-icon">event_busy</mat-icon>
+            <h3>Sin turnos agregados</h3>
+            <p>Complete el formulario y presione "Agregar Turno a la Lista" para comenzar</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Botones de acción -->
+    <div class="action-buttons">
+      <button
+        mat-stroked-button
+        (click)="cancelar()"
+        [disabled]="guardando()"
+      >
+        <mat-icon>cancel</mat-icon>
+        Cancelar
+      </button>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="guardarTurnos()"
+        [disabled]="turnosAgregados().length === 0 || guardando()"
+      >
+        @if (guardando()) {
+          <ng-container>
+            <mat-spinner diameter="20"></mat-spinner>
+            <span>Guardando...</span>
+          </ng-container>
+        } @else {
+          <ng-container>
+            <mat-icon>save</mat-icon>
+            <span>Guardar Turnos ({{ turnosAgregados().length }})</span>
+          </ng-container>
+        }
+      </button>
+    </div>
+
+  }
+
+</div>

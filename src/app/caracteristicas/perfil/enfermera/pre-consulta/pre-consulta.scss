@@ -1,0 +1,420 @@
+// src/app/caracteristicas/consultas/nueva-consulta-enfermeria/nueva-consulta-enfermeria.component.scss
+
+.pre-consulta-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Loading state
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+
+  p {
+    color: var(--mat-sys-on-surface-variant);
+    margin: 0;
+  }
+}
+
+// Error card
+.error-card {
+  margin-top: 20px;
+
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+
+    .error-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--mat-sys-error);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0 0 8px 0;
+      color: var(--mat-sys-on-surface);
+    }
+
+    p {
+      margin: 0 0 24px 0;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
+// Patient header
+.patient-header {
+  margin-bottom: 24px;
+
+  .patient-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .patient-main-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+
+    .patient-avatar {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--mat-sys-primary);
+    }
+
+    .patient-details {
+      h2 {
+        margin: 0 0 8px 0;
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .patient-meta {
+        mat-chip-set {
+          mat-chip {
+            mat-icon {
+              font-size: 18px;
+              width: 18px;
+              height: 18px;
+
+              &.male {
+                color: #2196f3;
+              }
+
+              &.female {
+                color: #e91e63;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .consultation-date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 8px;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+    }
+
+    span {
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+}
+
+// Vital signs card
+.vital-signs-card {
+  margin-bottom: 24px;
+
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  .vital-signs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+
+    .vital-field {
+      width: 100%;
+
+      span[matSuffix] {
+          padding-right: 8px;
+      }
+
+
+
+      .vital-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+
+        &.weight {
+          color: #ff9800;
+        }
+
+        &.height {
+          color: #9c27b0;
+        }
+
+        &.temperature {
+          color: #f44336;
+        }
+
+        &.pressure {
+          color: #e91e63;
+        }
+
+        &.heart {
+          color: #f44336;
+        }
+
+        &.respiratory {
+          color: #03a9f4;
+        }
+
+        &.saturation {
+          color: #4caf50;
+        }
+      }
+    }
+
+    // IMC display (calculado automáticamente)
+    .imc-display {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: rgba(0, 188, 212, 0.08);
+      border-radius: 8px;
+      border-left: 4px solid #00bcd4;
+
+      .vital-icon.imc {
+        font-size: 32px;
+        width: 32px;
+        height: 32px;
+        color: #00bcd4;
+      }
+
+      .imc-content {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        .imc-label {
+          font-size: 12px;
+          color: var(--mat-sys-on-surface-variant);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .imc-value {
+          font-size: 20px;
+          font-weight: 600;
+          color: var(--mat-sys-on-surface);
+          display: flex;
+          flex-direction: column;
+
+          small {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--mat-sys-on-surface-variant);
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Procedures card
+.procedures-card {
+  margin-bottom: 24px;
+
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  .procedures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+
+    .procedure-field {
+      width: 100%;
+
+      .procedure-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: var(--mat-sys-primary);
+      }
+    }
+  }
+
+
+  .procedures-summary {
+    h4 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+
+    .summary-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      mat-chip {
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .no-procedures {
+        color: var(--mat-sys-on-surface-variant);
+        font-style: italic;
+        padding: 8px 0;
+      }
+    }
+  }
+}
+
+// Action buttons
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 20px 0;
+
+  button {
+    min-width: 150px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    mat-spinner {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .nueva-consulta-enfermeria-container {
+    padding: 16px;
+  }
+
+  .patient-info-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .patient-main-info {
+    flex-direction: column;
+    align-items: flex-start !important;
+  }
+
+  .consultation-date {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .vital-signs-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .procedures-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .action-buttons {
+    flex-direction: column-reverse;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Snackbar custom styles
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .action-buttons,
+  mat-card-header {
+    display: none;
+  }
+
+  .nueva-consulta-enfermeria-container {
+    padding: 0;
+  }
+
+  mat-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+}

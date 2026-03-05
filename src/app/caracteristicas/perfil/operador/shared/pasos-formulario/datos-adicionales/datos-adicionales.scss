@@ -1,0 +1,88 @@
+// Step card
+.step-card {
+  margin-bottom: 24px;
+
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  mat-card-content {
+    padding-top: 20px;
+    // Esto asegura que el contenido del card no limite el ancho
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+// Form fields - Forzamos a que ocupen el 100% real
+.full-width {
+  width: 100% !important;
+  display: block; // Importante para mat-form-field
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; // Dos columnas iguales
+  gap: 16px;
+  width: 100%; // Asegurar que la fila use todo el card
+  margin-bottom: 16px;
+
+  // Ajuste para que los campos dentro de la fila se estiren
+  mat-form-field {
+    width: 100%;
+  }
+
+  .form-field-double, .form-field, .form-field-simple {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Form sections
+.form-section {
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+}

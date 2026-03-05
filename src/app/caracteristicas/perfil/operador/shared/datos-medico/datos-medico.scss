@@ -1,0 +1,33 @@
+.contenido-medico {
+  margin-bottom: 24px;
+
+  .contenido-medico-cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+
+
+    .doctor-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex: 1;
+
+      .doctor-icon {
+        font-size: 64px;
+        width: 64px;
+        height: 64px;
+        color: var(--mat-sys-primary);
+
+        h2 {
+          margin: 0 0 8px 0;
+          font-size: 24px;
+          font-weight: 500;
+          color: var(--mat-sys-on-surface);
+        }
+      }
+    }
+  }
+}

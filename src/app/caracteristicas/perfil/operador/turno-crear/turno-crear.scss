@@ -1,0 +1,41 @@
+.crear-turno-container{
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header{
+  margin-bottom: 24px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-icon{
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  opacity: 0.9;
+  color: var(--mat-sys-primary)
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.header-text p{
+  margin: 4px 0 0;
+  opacity: 0.85;
+  color: var(--mat-sys-on-surface-variant)
+}
+
+
+

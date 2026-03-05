@@ -1,0 +1,123 @@
+<mat-card class="step-card" [formGroup]="contactoForm">
+
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>contact_phone</mat-icon>
+      Información de Contacto
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <!-- Teléfonos -->
+    <div class="form-section">
+      <h3>Teléfonos</h3>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Celular</mat-label>
+          <input matInput formControlName="celular">
+          <mat-icon matPrefix>phone_android</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Teléfono Fijo</mat-label>
+          <input matInput formControlName="fijo">
+          <mat-icon matPrefix>phone</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Correos -->
+    <div class="form-section">
+      <h3>Correos Electrónicos</h3>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Correo Personal</mat-label>
+          <input matInput formControlName="correo_personal">
+          <mat-icon matPrefix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Correo Domicilio</mat-label>
+          <input matInput formControlName="correo_domicilio">
+          <mat-icon matPrefix>alternate_email</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Direcciones -->
+     <div formArrayName="direcciones">
+    <div
+      class="direccion-item"
+      *ngFor="let dir of direcciones.controls; let i = index"
+      [formGroupName]="i"
+      >
+
+      <div class="section-header">
+        <span>Dirección {{ i + 1 }}</span>
+        <button
+          mat-icon-button
+          color="warn"
+          type="button"
+          (click)="eliminarDireccion(i)"
+          *ngIf="direcciones.length > 1">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Calle / Avenida</mat-label>
+          <input matInput formControlName="calle">
+          <mat-icon matPrefix>signpost</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="numero">
+          <mat-icon matPrefix>tag</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Zona</mat-label>
+          <input matInput formControlName="zona">
+          <mat-icon matPrefix>location_on</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Ciudad</mat-label>
+          <input matInput formControlName="ciudad">
+          <mat-icon matPrefix>location_city</mat-icon>
+        </mat-form-field>
+      </div>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Tipo</mat-label>
+          <mat-select formControlName="tipo">
+            <mat-option value="personal">Personal</mat-option>
+            <mat-option value="trabajo">Trabajo</mat-option>
+            <mat-option value="familiar">Familiar</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <button
+      mat-stroked-button
+      type="button"
+      (click)="agregarDireccion()"
+      *ngIf="direcciones.length < 3">
+      <mat-icon>add</mat-icon>
+      Agregar Dirección
+    </button>
+    </mat-card-content>
+</mat-card>
+

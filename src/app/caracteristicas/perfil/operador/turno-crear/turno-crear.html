@@ -1,0 +1,80 @@
+<div class="crear-turno-container">
+
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">schedule</mat-icon>
+      <div class="header-text">
+        <h1>Creación de Turnos</h1>
+        <p>Creación de Turnos para el personal médico y de salud</p>
+      </div>
+    </div>
+  </div>
+
+  @if(store.empleado(); as medico){
+    <app-datos-medico [empleado]="medico"/>
+  }
+  <mat-card>
+    <mat-card-title>Nuevo Turno</mat-card-title>
+
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>Prestación</mat-label>
+        <mat-select formControlName="id_prestacion">
+          @for(p of store.prestaciones(); track p.id_prestacion){
+            <mat-option [value]="p.id_prestacion">
+              {{ p.nombre_prestacion }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha Inicio</mat-label>
+        <input matInput type="date" formControlName="fecha_inicio">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fecha Final</mat-label>
+        <input matInput type="date" formControlName="fecha_final">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hora Inicio</mat-label>
+        <input matInput type="time" formControlName="hora_inicio">
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>Hora Final</mat-label>
+        <input matInput type="time" formControlName="hora_final">
+      </mat-form-field>
+
+      <div class="dias-semana">
+        <label>Dias: </label>
+        @for(dia of store.diasSemana; track dia){
+          <mat-checkbox [formControlName]="dia">
+            {{ dia }}
+          </mat-checkbox>
+        }
+      </div>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="guardar()"
+        [disabled]="store.loading()">
+        Guardar Turno
+      </button>
+
+    </form>
+  </mat-card>
+
+  @if(store.error()){
+    <div class="error>">{{ store.error() }}</div>
+  }
+
+  @if(store.success()){
+    <div class="success">Turno creado correctamente</div>
+  }
+
+</div>

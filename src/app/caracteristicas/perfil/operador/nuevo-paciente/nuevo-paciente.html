@@ -1,1 +1,128 @@
-<p>nuevo-paciente works!</p>
+<div class="nuevo-paciente-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">person_add</mat-icon>
+      <div class="header-text">
+        <h1>Nuevo Paciente</h1>
+        <p>Registrar información del nuevo paciente en el sistema</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de carga -->
+  @if (cargando()) {
+    <mat-card class="loading-card">
+      <mat-card-content>
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando formulario...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+
+    <mat-stepper #stepper linear>
+
+      <!-- PASO 1: Datos personales -->
+      <mat-step [stepControl]="datosPersonalesForm" label="Datos Personales">
+        <form [formGroup]="datosPersonalesForm">
+
+          <app-datos-personales
+            [form]="datosPersonalesForm"
+            [estadosCiviles]="estadosCiviles()"
+            [tiposSangre]="tiposSangre()">
+          </app-datos-personales>
+
+          <div class="step-actions">
+            <button mat-button type="button" (click)="cancelar()">
+              Cancelar
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              matStepperNext
+              type="button">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+
+        </form>
+      </mat-step>
+
+      <!-- PASO 2: Contacto y direcciones -->
+      <mat-step [stepControl]="contactoForm" label="Contacto">
+        <form [formGroup]="contactoForm">
+
+          <app-contacto-direccion [contactoForm]="contactoForm">
+          </app-contacto-direccion>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Anterior
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              matStepperNext
+              type="button">
+              Siguiente
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+
+        </form>
+      </mat-step>
+
+      <!-- PASO 3: Datos adicionales -->
+      <mat-step [stepControl]="formAdicional" label="Datos Adicionales">
+        <form [formGroup]="formAdicional">
+
+          <app-datos-adicionales
+            [formAdicional]="formAdicional"
+            [ocupaciones]="ocupaciones()"
+            [nivelesEstudio]="nivelesEstudio()"
+            [idiomas]="idiomas()"
+            [idiomasMaternos]="idiomasMaternos()"
+            [autopertenencias]="autopertenencias()">
+
+          </app-datos-adicionales>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious type="button">
+              <mat-icon>arrow_back</mat-icon>
+              Anterior
+            </button>
+
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="guardando()"
+              (click)="guardarPaciente()">
+
+              @if (guardando()) {
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Guardando...</span>
+              } @else {
+                <span>Guardar Paciente</span>
+              }
+
+              @if (!guardando()) {
+                <mat-icon>save</mat-icon>
+              }
+            </button>
+          </div>
+
+        </form>
+      </mat-step>
+
+    </mat-stepper>
+  }
+
+</div>

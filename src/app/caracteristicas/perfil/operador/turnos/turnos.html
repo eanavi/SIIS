@@ -1,0 +1,172 @@
+<div class="gestionar-turnos-container">
+
+  <!-- Encabezado  -->
+
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">schedule</mat-icon>
+      <div class="header-text">
+        <h1>Turnos del Personal Médico </h1>
+        <p>Administra los turnos de los médicos y personal de salud.</p>
+      </div>
+    </div>
+
+      <button
+       mat-raised-button
+       color="primary"
+       type="button"
+       matTooltip="Nuevo Turno"
+       (click)="nuevoTurno()"
+       >
+       <mat-icon>today</mat-icon>
+       <span>Nuevo Turno</span>
+      </button>
+
+  </div>
+
+  <!-- Datos Medico -->
+  <app-datos-medico
+    *ngIf="store.empleado() as medico"
+    [empleado]="medico"
+    >
+  </app-datos-medico>
+
+  <!-- Filtro de búsqueda -->
+  <mat-card class="search-card">
+    <mat-card-content>
+
+      <div class="search-form">
+      <mat-form-field appearance="outline" class="etiqueta-fecha">
+        <mat-label>Seleccionar fecha</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="fechaControl">
+        <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+
+
+      </div>
+
+      @if (store.loading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando turnos...</p>
+        </div>
+      }
+
+      @if (store.error()) {
+        <div class="error-container">
+          <mat-icon>error</mat-icon>
+          <p>{{ store.error() }}</p>
+        </div>
+      }
+
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="lista-card">
+    <mat-card-content>
+
+      @if(!store.loading() && store.turnos().length === 0) {
+        <div class="empty-container">
+          <mat-icon class="empty-icon">event_busy</mat-icon>
+          <h3>No existen turnos registrados</h3>
+          <p>Seleccione una fecha para visualizar informacion.</p>
+        </div>
+      }
+
+      @if(store.turnos().length > 0) {
+
+        <div class="table-container">
+
+      <table mat-table [dataSource]="store.turnos()" class="tabla-turnos">
+
+      <!-- Servicio -->
+      <ng-container matColumnDef="prestacion">
+        <th mat-header-cell *matHeaderCellDef> Servicio </th>
+        <td mat-cell *matCellDef="let t">
+          <div class="servicio-cell">
+          <mat-icon>medical_services</mat-icon>
+          <span>{{ t.prestacion.nombre_prestacion }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Inicio  -->
+      <ng-container matColumnDef="fecha_inicio">
+        <th mat-header-cell *matHeaderCellDef> Inicio </th>
+        <td mat-cell *matCellDef="let t">
+          {{ t.fecha_inicio | date:'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Fin -->
+
+      <ng-container matColumnDef="fecha_final">
+        <th mat-header-cell *matHeaderCellDef> Fin </th>
+        <td mat-cell *matCellDef="let t">
+          {{ t.fecha_final | date:'dd/MM/yyyy' }}
+        </td>
+      </ng-container>
+
+      <!-- Hora Inicio -->
+      <ng-container matColumnDef="hora_inicio">
+        <th mat-header-cell *matHeaderCellDef> Hora Inicio </th>
+        <td mat-cell *matCellDef="let t">
+          {{ t.hora_inicio }}
+        </td>
+      </ng-container>
+
+      <!-- Hora Fin -->
+      <ng-container matColumnDef="hora_final">
+        <th mat-header-cell *matHeaderCellDef> Hora Fin </th>
+        <td mat-cell *matCellDef="let t">
+
+          {{ t.hora_final }}
+        </td>
+      </ng-container>
+
+      <!-- Dias -->
+    <ng-container matColumnDef="dias">
+      <th mat-header-cell *matHeaderCellDef> Días </th>
+      <td mat-cell *matCellDef="let turno">
+        <div class="dias-cell">
+          <mat-icon class="dias-icon">calendar_today</mat-icon>
+          <span class="dias">
+            @for(dia of turno.dia_semana; track $index)
+              {
+                 {{ dia }} {{ $index < turno.dia_semana.length - 1 ? ', ' : ''}}
+            }
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+      <!-- Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> </th>
+        <td mat-cell *matCellDef="let t">
+          <button mat-icon-button color="warn" (click)="eliminar(t.id_turno)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnas;" class="table-row"></tr>
+
+    </table>
+
+    </div>
+
+    <mat-paginator
+      class="table-pagination"
+      [length]="store.total()"
+      [pageSize]="store.tamanioActual()"
+      [pageIndex]="store.paginaActual() - 1"
+      [pageSizeOptions]="[5,10,25,50]"
+      (page)="cambiarPagina($event)">
+    </mat-paginator>
+  }
+    </mat-card-content>
+  </mat-card>
+</div>

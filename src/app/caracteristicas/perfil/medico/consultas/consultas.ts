@@ -134,7 +134,7 @@ export class Consultas implements OnInit{
     });
 
     // Navegar pasando ambos IDs
-    this.router.navigate(['/medico/consultas/nueva'], {
+    this.router.navigate(['/medico/nueva-consulta'], {
       queryParams: {
         idPaciente: paciente.id_paciente,
         idReserva: paciente.id_reserva
@@ -148,12 +148,9 @@ export class Consultas implements OnInit{
   }
 
   formatearFecha(fecha: string): string {
-    const date = new Date(fecha);
-    return date.toLocaleDateString('es-BO', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+    const [year, month, day] = fecha.split('-').map(Number);
+    const fechaFormateada = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+    return fechaFormateada;
   }
 
     // ✅ Método para obtener el texto del sexo

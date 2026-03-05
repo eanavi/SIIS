@@ -1,1 +1,224 @@
-<p>turno works!</p>
+<!-- src/app/caracteristicas/turno/turno.component.html -->
+
+<div class="turnos-container">
+
+  <!-- Header con información del médico -->
+  <mat-card class="header-card">
+    <mat-card-content>
+      <div class="header-content">
+        <div class="doctor-info">
+          <mat-icon class="doctor-icon">schedule</mat-icon>
+          <div>
+            <h2>Mis Turnos</h2>
+            <p class="doctor-name">Dr. {{ nombreMedico }}</p>
+          </div>
+        </div>
+        <mat-chip-set>
+          <mat-chip highlighted>
+            <mat-icon>today</mat-icon>
+            {{ fechaActual | date:'EEEE, d MMMM y':'':'es-BO' }}
+          </mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Formulario de búsqueda por fecha -->
+  <mat-card class="search-card">
+    <mat-card-content>
+      <form [formGroup]="busquedaForm" (ngSubmit)="buscarTurnos()">
+        <div class="search-form">
+
+          <mat-form-field appearance="outline" class="date-field">
+            <mat-label>Seleccionar fecha</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="fecha"
+              placeholder="Selecciona una fecha"
+            >
+            <mat-datepicker-toggle matIconPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="cargando()"
+            class="search-button"
+          >
+            @if (cargando()) {
+              <ng-container>
+                <mat-spinner diameter="20"></mat-spinner>
+                <span>Buscando...</span>
+              </ng-container>
+            } @else {
+              <ng-container>
+                <mat-icon>search</mat-icon>
+                <span>Buscar</span>
+              </ng-container>
+            }
+          </button>
+
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="buscarHoy()"
+            [disabled]="cargando()"
+            matTooltip="Ver turnos de hoy"
+          >
+            <mat-icon>today</mat-icon>
+            <span>Hoy</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Información de la fecha seleccionada -->
+      <div class="date-info">
+        <mat-icon class="info-icon">info</mat-icon>
+        <span>Mostrando turnos para: <strong>{{ formatearFechaParaMostrar(fechaSeleccionada()) }}</strong></span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Tabla de turnos -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      @if (cargando()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Cargando turnos...</p>
+        </div>
+      } @else if (mensajeError()) {
+        <div class="error-container">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h3>Error al cargar turnos</h3>
+          <p>{{ mensajeError() }}</p>
+          <button mat-raised-button color="primary" (click)="buscarTurnos()">
+            <mat-icon>refresh</mat-icon>
+            Reintentar
+          </button>
+        </div>
+      } @else if (sinResultados()) {
+        <div class="empty-state">
+          <mat-icon class="empty-icon">event_busy</mat-icon>
+          <h3>No hay turnos asignados</h3>
+          <p>No tienes turnos programados para {{ formatearFechaParaMostrar(fechaSeleccionada()) }}</p>
+          <button mat-raised-button color="primary" (click)="buscarHoy()">
+            <mat-icon>today</mat-icon>
+            Ver turnos de hoy
+          </button>
+        </div>
+      } @else {
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Turnos Programados</h3>
+            <mat-chip-set>
+              <mat-chip>{{ turnos().length }} turnos</mat-chip>
+            </mat-chip-set>
+          </div>
+
+          <table mat-table [dataSource]="turnos()" class="turnos-table">
+
+            <!-- ✅ Columna Fecha del Calendario -->
+            <ng-container matColumnDef="fecha_calendario">
+              <th mat-header-cell *matHeaderCellDef>Fecha</th>
+              <td mat-cell *matCellDef="let turno">
+                <div class="fecha-info">
+                  <mat-icon class="fecha-icon">event</mat-icon>
+                  <div class="fecha-content">
+                    <strong>{{ formatearFechaCalendario(turno.fecha_calendario) }}</strong>
+                    @if (esTurnoHoy(turno)) {
+                      <mat-chip class="badge-hoy">HOY</mat-chip>
+                    } @else if (esTurnoFuturo(turno)) {
+                      <mat-chip class="badge-futuro">Próximo</mat-chip>
+                    } @else if (esTurnoPasado(turno)) {
+                      <mat-chip class="badge-pasado">Pasado</mat-chip>
+                    }
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Columna Día de la Semana -->
+            <ng-container matColumnDef="dia_semana">
+              <th mat-header-cell *matHeaderCellDef>Día</th>
+              <td mat-cell *matCellDef="let turno">
+                <mat-chip-set>
+                  <mat-chip
+                    [highlighted]="esTurnoActivo(turno)"
+                    [class.turno-activo]="esTurnoActivo(turno)"
+                  >
+                    {{ turno.dia_semana }}
+                    @if (esTurnoActivo(turno)) {
+                      <mat-icon class="active-indicator">radio_button_checked</mat-icon>
+                    }
+                  </mat-chip>
+                </mat-chip-set>
+              </td>
+            </ng-container>
+
+            <!-- Columna Hora Inicio -->
+            <ng-container matColumnDef="hora_inicio">
+              <th mat-header-cell *matHeaderCellDef>Hora Inicio</th>
+              <td mat-cell *matCellDef="let turno">
+                <div class="hora-info">
+                  <mat-icon class="hora-icon">schedule</mat-icon>
+                  <strong>{{ formatearHora(turno.hora_inicio) }}</strong>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Columna Hora Final -->
+            <ng-container matColumnDef="hora_final">
+              <th mat-header-cell *matHeaderCellDef>Hora Final</th>
+              <td mat-cell *matCellDef="let turno">
+                <div class="hora-info">
+                  <mat-icon class="hora-icon">schedule</mat-icon>
+                  <strong>{{ formatearHora(turno.hora_final) }}</strong>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let turno">
+                <div class="actions-container">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="verEstadoTurno(turno)"
+                    [matTooltip]="'Ver detalle del turno del ' + formatearFechaCalendarioCompleta(turno.fecha_calendario)"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                    <span>Ver Detalle</span>
+                  </button>
+
+                  <mat-chip-set class="duration-chip">
+                    <mat-chip>
+                      <mat-icon>timer</mat-icon>
+                      {{ calcularDuracionTurno(turno) }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns;"
+              class="table-row"
+              [class.active-row]="esTurnoActivo(row)"
+              [class.future-row]="esTurnoFuturo(row)"
+              [class.past-row]="esTurnoPasado(row)"
+            ></tr>
+          </table>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+</div>

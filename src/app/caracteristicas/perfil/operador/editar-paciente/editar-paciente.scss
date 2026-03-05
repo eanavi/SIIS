@@ -1,0 +1,405 @@
+// src/app/caracteristicas/pacientes/editar-paciente/editar-paciente.component.scss
+
+.editar-paciente-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Page header
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+
+    .header-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--mat-sys-primary);
+    }
+
+    .header-text {
+      h1 {
+        margin: 0 0 4px 0;
+        font-size: 28px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+
+      p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--mat-sys-on-surface-variant);
+      }
+    }
+  }
+
+  .back-button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Patient info card
+.patient-info-card {
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, rgba(103, 58, 183, 0.05) 0%, rgba(63, 81, 181, 0.05) 100%);
+  border-left: 4px solid var(--mat-sys-primary);
+
+  .patient-quick-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .patient-avatar {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--mat-sys-primary);
+    }
+
+    .patient-data {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 12px 0;
+        font-size: 24px;
+        font-weight: 500;
+        color: var(--mat-sys-on-surface);
+      }
+
+      .patient-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
+        mat-chip {
+          mat-icon {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+          }
+        }
+
+        .male-chip {
+          background-color: rgba(33, 150, 243, 0.12) !important;
+          color: #1976d2 !important;
+
+          mat-icon {
+            color: #1976d2 !important;
+          }
+        }
+
+        .female-chip {
+          background-color: rgba(233, 30, 99, 0.12) !important;
+          color: #c2185b !important;
+
+          mat-icon {
+            color: #c2185b !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Loading card
+.loading-card {
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    gap: 16px;
+
+    p {
+      color: var(--mat-sys-on-surface-variant);
+      margin: 0;
+    }
+  }
+}
+
+// Error card
+.error-card {
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+
+    .error-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      color: var(--mat-sys-error);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0 0 8px 0;
+      color: var(--mat-sys-on-surface);
+    }
+
+    p {
+      margin: 0 0 24px 0;
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+}
+
+// Stepper customization
+::ng-deep {
+  .mat-stepper-horizontal {
+    background: transparent;
+  }
+
+  .mat-step-header {
+    .mat-step-icon {
+      background-color: var(--mat-sys-primary) !important;
+    }
+
+    .mat-step-icon-selected {
+      background-color: var(--mat-sys-primary) !important;
+    }
+  }
+}
+
+// Step card
+.step-card {
+  margin-bottom: 24px;
+
+  mat-card-header {
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+
+      mat-icon {
+        color: var(--mat-sys-primary);
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  mat-card-content {
+    padding-top: 20px;
+  }
+}
+
+// Form fields
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+
+  .form-field {
+    width: 100%;
+  }
+
+  .form-field-double {
+    width: 100%;
+    grid-column: span 1;
+  }
+
+  .form-field-simple {
+    width: 100%;
+  }
+}
+
+// Form sections
+.form-section {
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+}
+
+// Direcciones
+.direccion-item {
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+  border-left: 4px solid var(--mat-sys-primary);
+  margin-bottom: 16px;
+
+  .direccion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    span {
+      font-weight: 500;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+}
+
+// Step actions
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 20px 0;
+
+  button {
+    min-width: 150px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    mat-spinner {
+      margin-right: 8px;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .editar-paciente-container {
+    padding: 16px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .header-content {
+      .header-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .header-text {
+        h1 {
+          font-size: 24px;
+        }
+      }
+    }
+
+    .back-button {
+      width: 100%;
+    }
+  }
+
+  .patient-quick-info {
+    flex-direction: column;
+    align-items: flex-start !important;
+
+    .patient-avatar {
+      font-size: 48px !important;
+      width: 48px !important;
+      height: 48px !important;
+    }
+
+    .patient-data {
+      width: 100%;
+
+      h3 {
+        font-size: 20px !important;
+      }
+    }
+  }
+
+  .form-row {
+    grid-template-columns: 1fr !important;
+
+    .form-field-double {
+      grid-column: span 1 !important;
+    }
+  }
+
+  .step-actions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+// Snackbar styles
+::ng-deep {
+  .success-snackbar {
+    background-color: #4caf50 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+
+  .error-snackbar {
+    background-color: #f44336 !important;
+    color: white !important;
+
+    .mat-mdc-button {
+      color: white !important;
+    }
+  }
+}

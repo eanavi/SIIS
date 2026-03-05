@@ -1,0 +1,171 @@
+<div class="lista-empleado-container">
+  <!-- Encabezado -->
+  <div class="page-header">
+    <div class="header-content">
+      <mat-icon class="header-icon">switch_account</mat-icon>
+      <div class="header-text">
+        <h1>Gestión de Turnos</h1>
+        <p>Asignar y gestionar turnos de Personal Médico</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <!-- Barra de búsqueda
+
+  <mat-card class="search-card">
+    <mat-card-content>
+      <form [formGroup]="busquedaForm" class="search-form">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar Personal Área Médica</mat-label>
+          <input
+            matInput
+            formControlName="criterio"
+            placeholder="CI, nombre, apellido..."
+            autocomplete="off"
+          >
+          <mat-icon matPrefix>search</mat-icon>
+          @if (busquedaForm.get('criterio')?.value) {
+            <button
+              mat-icon-button
+              matSuffix
+              (click)="limpiarBusqueda()"
+              type="button"
+              matTooltip="Limpiar búsqueda"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+          <mat-hint>Busque por CI, paterno, nombre paterno, fecha de nacimiento</mat-hint>
+        </mat-form-field>
+
+        <div class="search-stats">
+          @if (!cargando()) {
+            <mat-chip-set>
+              <mat-chip highlighted>
+                <mat-icon>assignment_ind</mat-icon>
+                {{ totalRegistros() }} Personal médico encontrado
+              </mat-chip>
+            </mat-chip-set>
+          }
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  -->
+
+    <mat-card class="search-card">
+    <mat-card-content>
+
+        <mat-form-field appearance="outline" class="search-form">
+          <mat-label>Buscar Personal Médico</mat-label>
+          <input matInput [formControl]="criterioControl">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        @if (!store.loading()) {
+          <mat-chip-set>
+            <mat-chip highlighted>
+              {{ store.total() }} encontrados
+            </mat-chip>
+          </mat-chip-set>
+        }
+
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="lista-card">
+    <mat-card-content>
+      @if(store.loading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+      }
+      @else if(store.error()) {
+        <div class="error-container">
+          {{ store.error() }}
+        </div>
+      }
+      @else {
+        <div class="table-container">
+        <table mat-table [dataSource]="store.empleados()">
+
+            <!--  Columna CI -->
+            <ng-container matColumnDef="ci">
+              <th mat-header-cell *matHeaderCellDef> CI </th>
+              <td mat-cell *matCellDef="let empleado">
+                <div class="ci-cell">
+                  <mat-icon class="ci-icon">badge</mat-icon>
+                  <span class="ci-number">{{ empleado.ci }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+             <!-- Columna Nombre Completo -->
+            <ng-container matColumnDef="nombre_completo">
+              <th mat-header-cell *matHeaderCellDef>Nombre Completo</th>
+              <td mat-cell *matCellDef="let empleado">
+                <div class="nombre-cell">
+                  <mat-icon class="avatar-icon">account_circle</mat-icon>
+                  <span class="nombre-text">{{ empleado.nombre_completo }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+             <!-- Columna Fecha de Nacimiento -->
+            <ng-container matColumnDef="fecha_nacimiento">
+              <th mat-header-cell *matHeaderCellDef>Fecha de Nacimiento</th>
+              <td mat-cell *matCellDef="let empleado">
+                <div class="fecha-nacimiento-cell">
+                  <mat-icon class="fecha-icon">event</mat-icon>
+                  <span class="nacimiento-text">{{ empleado.fecha_nacimiento }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+             <!-- Columna Cargo -->
+            <ng-container matColumnDef="cargo">
+              <th mat-header-cell *matHeaderCellDef>Cargo</th>
+              <td mat-cell *matCellDef="let empleado">
+                <div class="cargo-cell">
+                  <mat-icon class="cargo-icon">work</mat-icon>
+                  <span class="cargo-text">{{ empleado.cargo }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Columna Acciones -->
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef>Acciones</th>
+              <td mat-cell *matCellDef="let empleado">
+                <div class="acciones-cell">
+                  <button
+                    mat-icon-button
+                    color="primary"
+                    (click)="editar(empleado)"
+                    matTooltip="Editar Turno"
+                  >
+                    <mat-icon>check_circle</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnasTabla"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnasTabla;" class="table-row"></tr>
+
+        </table>
+        </div>
+
+        <mat-paginator
+          [length]="store.total()"
+          [pageSize]="store.tamanio()"
+          [pageIndex]="store.pagina() - 1"
+          (page)="cambiarPagina($event)">
+        </mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>"
+
+</div>
